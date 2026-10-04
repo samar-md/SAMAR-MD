@@ -1,0 +1,22 @@
+{
+  "name": "samar-md-complete",
+  "version": "5.0.0",
+  "private": true,
+  "description": "SAMAR-MD - 50+ command WhatsApp automation bot by The-RUDE-x Cyber Team",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.18",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pino": "^9.6.0"
+  }
+}
