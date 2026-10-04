@@ -1,0 +1,1 @@
+Replace your existing server(2).js/server.js with server.js. Keep commands.js (the reaction version) and website files unchanged. This adds autoreact to normal incoming messages and keeps status reactions.
