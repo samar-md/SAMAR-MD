@@ -106,7 +106,7 @@ async function startSession(phone, requestPairing = false) {
       },
       logger: pino({ level: "silent" }),
       browser: Browsers.ubuntu("Chrome"),
-      markOnlineOnConnect: false,
+      markOnlineOnConnect: true,
       syncFullHistory: false,
       generateHighQualityLinkPreview: false,
       getMessage: async () => undefined
@@ -114,6 +114,13 @@ async function startSession(phone, requestPairing = false) {
 
     sockets.set(phone, sock);
     sock.ev.on("creds.update", saveCreds);
+
+    // Keep WhatsApp presence available while the bot session is running
+    const onlineInterval = setInterval(async () => {
+      try {
+        await sock.sendPresenceUpdate("available");
+      } catch {}
+    }, 30000);
 
     sock.ev.on("connection.update", async update => {
       const { connection, lastDisconnect, qr } = update;
@@ -128,6 +135,7 @@ async function startSession(phone, requestPairing = false) {
       }
 
       if (connection === "close") {
+        clearInterval(onlineInterval);
         user.connected = false;
         saveUsers();
         sockets.delete(phone);
@@ -155,17 +163,6 @@ async function startSession(phone, requestPairing = false) {
 
           if (user.settings.autoread && !msg.key.fromMe) {
             try { await sock.readMessages([msg.key]); } catch {}
-          }
-
-          // Auto reaction for normal incoming chats
-          if (user.settings.autoreact && !msg.key.fromMe) {
-            try {
-              const emoji = user.settings.fixedreact || randomReactions[Math.floor(Math.random() * randomReactions.length)];
-              await sock.sendMessage(remote, { react: { text: emoji, key: msg.key } });
-              console.log(`[${phone}] message reacted ${emoji}`);
-            } catch (e) {
-              console.log(`[${phone}] auto reaction failed:`, e?.message || e);
-            }
           }
 
           if (user.settings.autotyping && remote.endsWith("@g.us") || user.settings.autotyping && remote.endsWith("@s.whatsapp.net")) {
