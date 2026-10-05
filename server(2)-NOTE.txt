@@ -1,4 +1,0 @@
-// Existing server(2).js is compatible with the expanded reaction pack.
-// It imports: const { handle, randomReactions } = require("./commands");
-// Replace commands.js with the included fixed version.
-// No server logic change is required for the reaction expansion.
