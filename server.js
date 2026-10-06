@@ -11,7 +11,10 @@ const {
   useMultiFileAuthState,
   DisconnectReason,
   Browsers,
-  makeCacheableSignalKeyStore
+  makeCacheableSignalKeyStore,
+  initAuthCreds,
+  BufferJSON,
+  proto
 } = require("@whiskeysockets/baileys");
 
 const { handle, randomReactions } = require("./commands");
@@ -386,12 +389,4 @@ app.listen(PORT, () => {
   for (const phone of Object.keys(users)) {
     startSession(phone).catch(e => console.error(`[${phone}] restore`, e.message));
   }
-});
-// Railway crash protection
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err?.stack || err);
-});
-
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled Rejection:", reason);
 });
